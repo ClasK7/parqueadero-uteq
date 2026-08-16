@@ -28,10 +28,12 @@ Siga estos pasos exactos para configurar el entorno de desarrollo y ejecutar la 
    cd parqueadero-uteq
 
 2. **Instalar las dependencias:**
-    ```bash npm install
+    ```bash 
+    npm install
 
 3. **Configurar las variables de entorno:**
-    ```bash Cree un archivo llamado .env en la raíz absoluta del proyecto y asigne sus credenciales de Firebase:
+    ```bash 
+    Cree un archivo llamado .env en la raíz absoluta del proyecto y asigne sus credenciales de Firebase:
     Fragmento de código
     VITE_FIREBASE_API_KEY=tu_api_key
     VITE_FIREBASE_AUTH_DOMAIN=tu_proyecto.firebaseapp.com
