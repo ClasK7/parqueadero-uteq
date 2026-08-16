@@ -1,23 +1,28 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, NavLink } from "react-router-dom";
 import Inicio from "./pages/Inicio";
-import "./styles.css";
-
-// Importaciones temporales para evitar errores hasta que programemos estas páginas
 import Estacionamiento from "./pages/Estacionamiento";
 import DetalleEspacio from "./pages/DetalleEspacio";
+import "./styles.css";
 
 export default function App() {
   return (
     <BrowserRouter>
-      {/* Barra de navegación global simple */}
+      {/* Barra de navegación con colores UTEQ */}
       <nav className="navbar">
-        <strong>UTEQ Smart Parking</strong>
-        <div>
-          <a href="/" style={{ color: "white", textDecoration: "none" }}>Inicio</a>
-          <a href="/estacionamiento" style={{ color: "#d8f5ea", textDecoration: "none" }}>Parqueadero</a>
+        <div className="navbar-brand">
+          <span style={{ fontSize: '1.5rem' }}>🎓</span> UTEQ Smart Parking
+        </div>
+        <div className="navbar-links">
+          <NavLink to="/" end className={({ isActive }) => (isActive ? "active" : "")}>
+            Inicio
+          </NavLink>
+          <NavLink to="/estacionamiento" className={({ isActive }) => (isActive ? "active" : "")}>
+            Monitor de Parqueo
+          </NavLink>
         </div>
       </nav>
 
+      {/* Rutas de la aplicación */}
       <Routes>
         <Route path="/" element={<Inicio />} />
         <Route path="/estacionamiento" element={<Estacionamiento />} />
