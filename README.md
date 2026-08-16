@@ -26,3 +26,30 @@ Siga estos pasos exactos para configurar el entorno de desarrollo y ejecutar la 
    ```bash
    git clone [https://github.com/TU_USUARIO/parqueadero-uteq.git](https://github.com/TU_USUARIO/parqueadero-uteq.git)
    cd parqueadero-uteq
+
+2. **Instalar las dependencias:**
+    ```bash npm install
+
+3. **Configurar las variables de entorno:**
+    ```bash Cree un archivo llamado .env en la raíz absoluta del proyecto y asigne sus credenciales de Firebase:
+    Fragmento de código
+    VITE_FIREBASE_API_KEY=tu_api_key
+    VITE_FIREBASE_AUTH_DOMAIN=tu_proyecto.firebaseapp.com
+    VITE_FIREBASE_DATABASE_URL=https://tu_proyecto-default-rtdb.firebaseio.com
+    ITE_FIREBASE_PROJECT_ID=tu_proyecto
+    VITE_FIREBASE_STORAGE_BUCKET=tu_proyecto.firebasestorage.app
+    VITE_FIREBASE_MESSAGING_SENDER_ID=tu_messaging_sender_id
+    VITE_FIREBASE_APP_ID=tu_app_id
+
+4. **Inicializar la Base de Datos (Solo el primer uso):**
+Si su Realtime Database está completamente vacía, inicie la aplicación, diríjase a la página de "Inicio" y haga clic en el botón de Setup ("Generar 80 Sensores"). Esto ejecutará el script matemático que calcula las coordenadas y crea la estructura inicial de los nodos.
+
+5. **Ejecutar el servidor local:**
+    ```bash
+    npm run dev
+    La aplicación estará disponible y lista para pruebas en http://localhost:5173.
+
+## 👨‍💻 Autor
+* Kevin Rolando Vaca Clas
+* Estudiante de 8vo Semestre, Ingeniería en Redes Telemáticas.
+* Universidad Técnica Estatal de Quevedo (UTEQ).
