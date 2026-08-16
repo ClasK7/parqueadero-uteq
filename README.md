@@ -1,16 +1,28 @@
-# React + Vite
+# 🎓 UTEQ Smart Parking - Monitoreo Telemático en Tiempo Real
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Este proyecto es una aplicación web desarrollada para simular y monitorear un estacionamiento inteligente en el Campus La María de la Universidad Técnica Estatal de Quevedo (UTEQ). Utiliza una arquitectura moderna basada en componentes y una base de datos en tiempo real para gestionar 80 espacios de parqueo organizados geográficamente[cite: 4].
 
-Currently, two official plugins are available:
+## 🚀 Características Principales
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+* **Monitoreo en Tiempo Real:** Lectura y escritura instantánea del estado de los sensores (Libre/Ocupado) mediante Firebase Realtime Database[cite: 4].
+* **Simulación Integrada:** Motor de generación de tráfico aleatorio que actualiza distancias ultrasónicas detectadas y registros históricos de forma dinámica[cite: 4].
+* **Geolocalización:** Representación interactiva del parqueadero mediante `react-leaflet`, calculando el *bounding box* exacto de cada celda a partir de las coordenadas del terreno[cite: 4].
+* **Filtros Dinámicos:** Vistas personalizables de la cuadrícula operativa mediante filtros por estado de ocupación y distribución de columnas[cite: 4].
+* **Rutas Dinámicas:** Navegación jerárquica con `react-router-dom` para inspeccionar el historial detallado y métricas de cada sensor[cite: 4].
 
-## React Compiler
+## 🛠️ Tecnologías Utilizadas
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+* **Frontend:** React 18, Vite
+* **Enrutamiento:** React Router DOM
+* **Mapas:** Leaflet, React-Leaflet
+* **Base de Datos (BaaS):** Firebase Realtime Database
+* **Estilos:** CSS3 Nativo (UI Responsiva y adaptada a la paleta institucional)
 
-## Expanding the Oxlint configuration
+## ⚙️ Instalación y Ejecución Local
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Siga estos pasos exactos para configurar el entorno de desarrollo y ejecutar la aplicación[cite: 4]:
+
+1. **Clonar el repositorio:**
+   ```bash
+   git clone [https://github.com/TU_USUARIO/parqueadero-uteq.git](https://github.com/TU_USUARIO/parqueadero-uteq.git)
+   cd parqueadero-uteq
