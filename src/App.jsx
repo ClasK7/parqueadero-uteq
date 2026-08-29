@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes, NavLink } from "react-router-do
 import Inicio from "./pages/Inicio";
 import Estacionamiento from "./pages/Estacionamiento";
 import DetalleEspacio from "./pages/DetalleEspacio";
+import Vehiculos from "./views/parqueadero/Vehiculos"; // <-- Módulo de CoreUI
 import "./styles.css";
 
 export default function App() {
@@ -19,6 +20,10 @@ export default function App() {
           <NavLink to="/estacionamiento" className={({ isActive }) => (isActive ? "active" : "")}>
             Monitor de Parqueo
           </NavLink>
+          {/* <-- Nuevo enlace al panel de administración --> */}
+          <NavLink to="/vehiculos" className={({ isActive }) => (isActive ? "active" : "")}>
+            Vehículos y Propietarios
+          </NavLink>
         </div>
       </nav>
 
@@ -27,6 +32,8 @@ export default function App() {
         <Route path="/" element={<Inicio />} />
         <Route path="/estacionamiento" element={<Estacionamiento />} />
         <Route path="/espacios/:id" element={<DetalleEspacio />} />
+        {/* <-- Nueva ruta del CRUD --> */}
+        <Route path="/vehiculos" element={<Vehiculos />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
