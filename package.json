@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@coreui/coreui": "^5.9.0",
+    "@coreui/react": "^5.13.0",
     "firebase": "^12.17.1",
     "leaflet": "^1.9.4",
     "react": "^19.2.8",
