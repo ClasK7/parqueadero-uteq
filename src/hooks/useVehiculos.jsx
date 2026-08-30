@@ -8,6 +8,7 @@ export const useVehiculos = () => {
   const [error, setError] = useState(null);
 
   // Leer (Read): Extrae los datos ordenados por los más recientes
+  // Leer (Read): Extrae los datos ordenados alfabéticamente
   const fetchVehiculos = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -15,7 +16,7 @@ export const useVehiculos = () => {
       const { data, error } = await supabase
         .from('vehiculos')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('propietario_nombre', { ascending: true }); // <-- Esta línea mantiene el orden
 
       if (error) throw error;
       setVehiculos(data);
