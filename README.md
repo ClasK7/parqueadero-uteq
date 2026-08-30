@@ -8,6 +8,8 @@
 
 Este proyecto es una plataforma web desarrollada para la gestión y monitoreo del estacionamiento inteligente en la Sede Central de la Universidad Técnica Estatal de Quevedo (UTEQ). El sistema combina una arquitectura en tiempo real para el monitoreo de 80 espacios de parqueo organizados geográficamente, junto con un módulo administrativo relacional para el control estructurado de vehículos y propietarios autorizados.
 
+![Vista del Panel de Administración del Smart Parking](public/Prueba_funcionamiento.png)
+
 ## 🚀 Características Principales
 
 * **Gestión Administrativa (CRUD Completo):** Panel centralizado para registrar, visualizar, actualizar y eliminar datos de vehículos y propietarios, con generación automática de avatares y enmascaramiento de seguridad para números de cédula.
