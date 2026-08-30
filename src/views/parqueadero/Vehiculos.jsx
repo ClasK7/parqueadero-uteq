@@ -67,16 +67,25 @@ const Vehiculos = () => {
       return;
     }
 
+    // Clonamos los datos del formulario para no afectar el estado original
+    const datosParaGuardar = { ...formData };
+    
+    // Eliminamos los campos que son generados automáticamente por la base de datos
+    delete datosParaGuardar.id;
+    delete datosParaGuardar.cedula_enmascarada;
+    // Si tu consulta de lectura trae created_at, también elimínalo por precaución:
+    delete datosParaGuardar.created_at; 
+
     let result;
     if (vehiculoActual) {
-      result = await updateVehiculo(vehiculoActual.id, formData);
+      result = await updateVehiculo(vehiculoActual.id, datosParaGuardar);
     } else {
-      result = await addVehiculo(formData);
+      result = await addVehiculo(datosParaGuardar);
     }
 
     if (result.success) {
       setModalVisible(false);
-      fetchVehiculos(); // Recargar para obtener la cédula enmascarada del servidor
+      fetchVehiculos(); // Recarga la tabla para traer la nueva cédula enmascarada
     } else {
       alert("Error al guardar: " + result.error);
     }
