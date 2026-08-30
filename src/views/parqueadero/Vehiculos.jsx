@@ -4,41 +4,38 @@ import {
   CTableHead, CTableHeaderCell, CTableRow, CButton, CModal, CModalHeader, CModalTitle,
   CModalBody, CModalFooter, CForm, CFormInput, CBadge, CSpinner, CFormSelect
 } from '@coreui/react';
-import { useVehiculos } from '../../hooks/useVehiculos'; // Ajusta la ruta si es necesario
+import { useVehiculos } from '../../hooks/useVehiculos';
 
 const Vehiculos = () => {
   const { vehiculos, loading, fetchVehiculos, addVehiculo, updateVehiculo, deleteVehiculo } = useVehiculos();
   
-  // Estados de la interfaz
   const [searchTerm, setSearchTerm] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-  const [vehiculoActual, setVehiculoActual] = useState(null); // null = Agregar, Objeto = Editar
+  const [vehiculoActual, setVehiculoActual] = useState(null);
   
-  // Estado del formulario
   const [formData, setFormData] = useState({
     placa: '', marca: '', modelo: '', anio: '', color: '', 
-    propietario_nombre: '', cedula: '', correo: '', estado: 'Autorizado'
+    propietario_nombre: '', cedula: '', correo: '', estado: 'Autorizado',
+    foto_vehiculo: '', foto_propietario: ''
   });
 
   useEffect(() => {
     fetchVehiculos();
   }, [fetchVehiculos]);
 
-  // Filtrado de búsqueda (Placa o Propietario)
   const filteredVehiculos = vehiculos.filter(v => 
     v.placa.toLowerCase().includes(searchTerm.toLowerCase()) || 
     v.propietario_nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Manejo del formulario
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
   const openAddModal = () => {
-    setFormData({ placa: '', marca: '', modelo: '', anio: '', color: '', propietario_nombre: '', cedula: '', correo: '', estado: 'Autorizado' });
+    setFormData({ placa: '', marca: '', modelo: '', anio: '', color: '', propietario_nombre: '', cedula: '', correo: '', estado: 'Autorizado', foto_vehiculo: '', foto_propietario: '' });
     setVehiculoActual(null);
     setModalVisible(true);
   };
@@ -55,7 +52,6 @@ const Vehiculos = () => {
   };
 
   const handleSave = async () => {
-    // Validación básica requerida por la rúbrica
     if (!formData.placa || !formData.propietario_nombre || !formData.cedula) {
       alert("La placa, el nombre del propietario y la cédula son obligatorios.");
       return;
@@ -85,152 +81,203 @@ const Vehiculos = () => {
   };
 
   return (
-    <CRow>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader className="d-flex justify-content-between align-items-center">
-            <strong>Vehículos y propietarios</strong>
-            <CButton color="success" onClick={openAddModal} disabled={loading}>
-              + Agregar Nuevo
-            </CButton>
-          </CCardHeader>
-          <CCardBody>
-            {/* Buscador */}
-            <CRow className="mb-3">
-              <CCol md={6}>
-                <CFormInput 
-                  type="text" 
-                  placeholder="Buscar placa o propietario..." 
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </CCol>
-              <CCol md={6} className="text-end text-muted">
-                {filteredVehiculos.length} vehículos encontrados
-              </CCol>
-            </CRow>
+    // Forzamos el tema claro (light) para que coincida con la plantilla del profesor
+    <div data-coreui-theme="light" style={{ padding: '20px', backgroundColor: '#f3f4f7', minHeight: '100vh' }}>
+      <CRow>
+        <CCol xs={12}>
+          <CCard className="mb-4 shadow-sm border-0">
+            <CCardHeader className="bg-white d-flex justify-content-between align-items-center py-3">
+              <div>
+                <h5 className="mb-0 fw-bold">Vehículos y propietarios</h5>
+                <small className="text-muted">Vehículos autorizados en UTEQ Smart Parking</small>
+              </div>
+              <CButton color="success" onClick={openAddModal} disabled={loading} className="text-white fw-semibold">
+                Actualizar / Agregar
+              </CButton>
+            </CCardHeader>
+            <CCardBody className="bg-white">
+              
+              <CRow className="mb-3">
+                <CCol md={6}>
+                  <CFormInput 
+                    type="text" 
+                    placeholder="Buscar placa, vehículo o propietario..." 
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </CCol>
+                <CCol md={6} className="text-end text-muted align-self-center">
+                  {filteredVehiculos.length} vehículos
+                </CCol>
+              </CRow>
 
-            {/* Tabla Principal */}
-            {loading && !modalVisible && !deleteModalVisible ? (
-              <div className="text-center my-5"><CSpinner color="primary" /></div>
-            ) : (
-              <CTable align="middle" className="mb-0 border" hover responsive>
-                <CTableHead color="dark">
-                  <CTableRow>
-                    <CTableHeaderCell>Placa</CTableHeaderCell>
-                    <CTableHeaderCell>Vehículo</CTableHeaderCell>
-                    <CTableHeaderCell>Propietario</CTableHeaderCell>
-                    <CTableHeaderCell>Cédula</CTableHeaderCell>
-                    <CTableHeaderCell>Estado</CTableHeaderCell>
-                    <CTableHeaderCell>Acciones</CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                  {filteredVehiculos.map((v) => (
-                    <CTableRow key={v.id}>
-                      <CTableDataCell><strong>{v.placa}</strong></CTableDataCell>
-                      <CTableDataCell>
-                        <div>{v.marca} {v.modelo}</div>
-                        <div className="small text-muted">{v.anio} | {v.color}</div>
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <div>{v.propietario_nombre}</div>
-                        <div className="small text-muted">{v.correo}</div>
-                      </CTableDataCell>
-                      <CTableDataCell>{v.cedula}</CTableDataCell>
-                      <CTableDataCell>
-                        <CBadge color={v.estado === 'Autorizado' ? 'success' : 'danger'}>
-                          {v.estado}
-                        </CBadge>
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <CButton color="info" variant="ghost" size="sm" onClick={() => openEditModal(v)}>Editar</CButton>
-                        <CButton color="danger" variant="ghost" size="sm" onClick={() => confirmDelete(v)} className="ms-2">Eliminar</CButton>
-                      </CTableDataCell>
+              {loading && !modalVisible && !deleteModalVisible ? (
+                <div className="text-center my-5"><CSpinner color="success" /></div>
+              ) : (
+                <CTable align="middle" className="mb-0 border" hover responsive>
+                  <CTableHead style={{ backgroundColor: '#1f2937', color: 'white' }}>
+                    <CTableRow>
+                      <CTableHeaderCell className="bg-dark text-white border-0">Foto del vehículo</CTableHeaderCell>
+                      <CTableHeaderCell className="bg-dark text-white border-0">Placa</CTableHeaderCell>
+                      <CTableHeaderCell className="bg-dark text-white border-0">Vehículo</CTableHeaderCell>
+                      <CTableHeaderCell className="bg-dark text-white border-0">Año / color</CTableHeaderCell>
+                      <CTableHeaderCell className="bg-dark text-white border-0 text-center">Foto del propietario</CTableHeaderCell>
+                      <CTableHeaderCell className="bg-dark text-white border-0">Propietario</CTableHeaderCell>
+                      <CTableHeaderCell className="bg-dark text-white border-0">Cédula</CTableHeaderCell>
+                      <CTableHeaderCell className="bg-dark text-white border-0">Correo</CTableHeaderCell>
+                      <CTableHeaderCell className="bg-dark text-white border-0">Estado</CTableHeaderCell>
+                      <CTableHeaderCell className="bg-dark text-white border-0">Acciones</CTableHeaderCell>
                     </CTableRow>
-                  ))}
-                </CTableBody>
-              </CTable>
-            )}
-          </CCardBody>
-        </CCard>
-      </CCol>
+                  </CTableHead>
+                  <CTableBody>
+                    {filteredVehiculos.map((v) => (
+                      <CTableRow key={v.id}>
+                        {/* Foto Vehículo */}
+                        <CTableDataCell>
+                          <img 
+                            src={v.foto_vehiculo || `https://ui-avatars.com/api/?name=${v.marca}+${v.modelo}&background=random`} 
+                            alt="Vehículo" 
+                            style={{ width: '80px', height: '50px', objectFit: 'cover', borderRadius: '4px' }} 
+                          />
+                        </CTableDataCell>
+                        
+                        {/* Placa (Estilo oscuro) */}
+                        <CTableDataCell>
+                          <CBadge color="dark" className="fs-6 px-3 py-2 rounded-1">{v.placa}</CBadge>
+                        </CTableDataCell>
+                        
+                        {/* Vehículo */}
+                        <CTableDataCell>
+                          <div className="fw-bold">{v.marca}</div>
+                          <div className="small text-muted">{v.modelo}</div>
+                        </CTableDataCell>
+                        
+                        {/* Año y Color */}
+                        <CTableDataCell>
+                          <div>{v.anio}</div>
+                          <div className="small text-muted">{v.color}</div>
+                        </CTableDataCell>
+                        
+                        {/* Foto Propietario */}
+                        <CTableDataCell className="text-center">
+                          <img 
+                            src={v.foto_propietario || `https://ui-avatars.com/api/?name=${v.propietario_nombre}&background=random&rounded=true`} 
+                            alt="Propietario" 
+                            style={{ width: '45px', height: '45px', objectFit: 'cover', borderRadius: '50%' }} 
+                          />
+                        </CTableDataCell>
+                        
+                        {/* Propietario */}
+                        <CTableDataCell>
+                          <div className="fw-bold">{v.propietario_nombre}</div>
+                        </CTableDataCell>
+                        
+                        <CTableDataCell>{v.cedula}</CTableDataCell>
+                        
+                        <CTableDataCell>
+                          <a href={`mailto:${v.correo}`} className="text-decoration-none">{v.correo}</a>
+                        </CTableDataCell>
+                        
+                        <CTableDataCell>
+                          <CBadge color={v.estado === 'Autorizado' ? 'success' : 'danger'} shape="rounded-pill">
+                            {v.estado}
+                          </CBadge>
+                        </CTableDataCell>
+                        
+                        <CTableDataCell>
+                          <CButton color="info" variant="ghost" size="sm" onClick={() => openEditModal(v)}>Editar</CButton>
+                          <CButton color="danger" variant="ghost" size="sm" onClick={() => confirmDelete(v)}>Borrar</CButton>
+                        </CTableDataCell>
+                      </CTableRow>
+                    ))}
+                  </CTableBody>
+                </CTable>
+              )}
+            </CCardBody>
+          </CCard>
+        </CCol>
 
-      {/* Modal Agregar / Editar */}
-      <CModal visible={modalVisible} onClose={() => setModalVisible(false)} backdrop="static">
-        <CModalHeader>
-          <CModalTitle>{vehiculoActual ? 'Editar Vehículo' : 'Registrar Nuevo Vehículo'}</CModalTitle>
-        </CModalHeader>
-        <CModalBody>
-          <CForm>
-            <CRow className="mb-3">
-              <CCol md={6}>
-                <CFormInput label="Placa *" name="placa" value={formData.placa} onChange={handleInputChange} disabled={loading} />
-              </CCol>
-              <CCol md={6}>
-                <CFormInput label="Marca" name="marca" value={formData.marca} onChange={handleInputChange} disabled={loading} />
-              </CCol>
-            </CRow>
-            <CRow className="mb-3">
-              <CCol md={6}>
-                <CFormInput label="Modelo" name="modelo" value={formData.modelo} onChange={handleInputChange} disabled={loading} />
-              </CCol>
-              <CCol md={3}>
-                <CFormInput label="Año" name="anio" type="number" value={formData.anio} onChange={handleInputChange} disabled={loading} />
-              </CCol>
-              <CCol md={3}>
-                <CFormInput label="Color" name="color" value={formData.color} onChange={handleInputChange} disabled={loading} />
-              </CCol>
-            </CRow>
-            <hr />
-            <CRow className="mb-3">
-              <CCol md={12}>
-                <CFormInput label="Nombre del Propietario *" name="propietario_nombre" value={formData.propietario_nombre} onChange={handleInputChange} disabled={loading} />
-              </CCol>
-            </CRow>
-            <CRow className="mb-3">
-              <CCol md={6}>
-                <CFormInput label="Cédula *" name="cedula" value={formData.cedula} onChange={handleInputChange} disabled={loading} />
-              </CCol>
-              <CCol md={6}>
-                <CFormInput label="Correo" name="correo" type="email" value={formData.correo} onChange={handleInputChange} disabled={loading} />
-              </CCol>
-            </CRow>
-            <CRow>
-              <CCol md={12}>
-                <CFormSelect label="Estado" name="estado" value={formData.estado} onChange={handleInputChange} disabled={loading}>
-                  <option value="Autorizado">Autorizado</option>
-                  <option value="Bloqueado">Bloqueado</option>
-                </CFormSelect>
-              </CCol>
-            </CRow>
-          </CForm>
-        </CModalBody>
-        <CModalFooter>
-          <CButton color="secondary" onClick={() => setModalVisible(false)} disabled={loading}>Cancelar</CButton>
-          <CButton color="primary" onClick={handleSave} disabled={loading}>
-            {loading ? <CSpinner size="sm" /> : 'Guardar Cambios'}
-          </CButton>
-        </CModalFooter>
-      </CModal>
+        {/* Modal Agregar / Editar */}
+        <CModal size="lg" visible={modalVisible} onClose={() => setModalVisible(false)} backdrop="static">
+          <CModalHeader>
+            <CModalTitle>{vehiculoActual ? 'Editar Registro' : 'Nuevo Registro'}</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            <CForm>
+              <h6 className="text-primary border-bottom pb-2 mb-3">Datos del Vehículo</h6>
+              <CRow className="mb-3">
+                <CCol md={4}>
+                  <CFormInput label="Placa *" name="placa" value={formData.placa} onChange={handleInputChange} disabled={loading} />
+                </CCol>
+                <CCol md={4}>
+                  <CFormInput label="Marca" name="marca" value={formData.marca} onChange={handleInputChange} disabled={loading} />
+                </CCol>
+                <CCol md={4}>
+                  <CFormInput label="Modelo" name="modelo" value={formData.modelo} onChange={handleInputChange} disabled={loading} />
+                </CCol>
+              </CRow>
+              <CRow className="mb-3">
+                <CCol md={3}>
+                  <CFormInput label="Año" name="anio" type="number" value={formData.anio} onChange={handleInputChange} disabled={loading} />
+                </CCol>
+                <CCol md={3}>
+                  <CFormInput label="Color" name="color" value={formData.color} onChange={handleInputChange} disabled={loading} />
+                </CCol>
+                <CCol md={6}>
+                  <CFormInput label="URL Foto del Vehículo (Opcional)" name="foto_vehiculo" placeholder="https://ejemplo.com/auto.jpg" value={formData.foto_vehiculo} onChange={handleInputChange} disabled={loading} />
+                </CCol>
+              </CRow>
+              
+              <h6 className="text-primary border-bottom pb-2 mt-4 mb-3">Datos del Propietario</h6>
+              <CRow className="mb-3">
+                <CCol md={8}>
+                  <CFormInput label="Nombre Completo *" name="propietario_nombre" value={formData.propietario_nombre} onChange={handleInputChange} disabled={loading} />
+                </CCol>
+                <CCol md={4}>
+                  <CFormInput label="Cédula *" name="cedula" value={formData.cedula} onChange={handleInputChange} disabled={loading} />
+                </CCol>
+              </CRow>
+              <CRow className="mb-3">
+                <CCol md={5}>
+                  <CFormInput label="Correo" name="correo" type="email" value={formData.correo} onChange={handleInputChange} disabled={loading} />
+                </CCol>
+                <CCol md={4}>
+                  <CFormInput label="URL Foto Propietario (Opcional)" name="foto_propietario" placeholder="https://ejemplo.com/foto.jpg" value={formData.foto_propietario} onChange={handleInputChange} disabled={loading} />
+                </CCol>
+                <CCol md={3}>
+                  <CFormSelect label="Estado" name="estado" value={formData.estado} onChange={handleInputChange} disabled={loading}>
+                    <option value="Autorizado">Autorizado</option>
+                    <option value="Bloqueado">Bloqueado</option>
+                  </CFormSelect>
+                </CCol>
+              </CRow>
+            </CForm>
+          </CModalBody>
+          <CModalFooter>
+            <CButton color="secondary" onClick={() => setModalVisible(false)} disabled={loading}>Cancelar</CButton>
+            <CButton color="success" className="text-white" onClick={handleSave} disabled={loading}>
+              {loading ? <CSpinner size="sm" /> : 'Guardar Cambios'}
+            </CButton>
+          </CModalFooter>
+        </CModal>
 
-      {/* Modal Confirmación Eliminar */}
-      <CModal visible={deleteModalVisible} onClose={() => setDeleteModalVisible(false)}>
-        <CModalHeader>
-          <CModalTitle>Confirmar Eliminación</CModalTitle>
-        </CModalHeader>
-        <CModalBody>
-          ¿Estás seguro que deseas eliminar el vehículo con placa <strong>{vehiculoActual?.placa}</strong> perteneciente a <strong>{vehiculoActual?.propietario_nombre}</strong>? Esta acción no se puede deshacer.
-        </CModalBody>
-        <CModalFooter>
-          <CButton color="secondary" onClick={() => setDeleteModalVisible(false)} disabled={loading}>Cancelar</CButton>
-          <CButton color="danger" onClick={handleDelete} disabled={loading}>
-            {loading ? <CSpinner size="sm" /> : 'Sí, Eliminar'}
-          </CButton>
-        </CModalFooter>
-      </CModal>
-
-    </CRow>
+        {/* Modal Eliminar */}
+        <CModal visible={deleteModalVisible} onClose={() => setDeleteModalVisible(false)}>
+          <CModalHeader>
+            <CModalTitle>Confirmar Eliminación</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            ¿Estás seguro de eliminar el vehículo <strong>{vehiculoActual?.placa}</strong> de <strong>{vehiculoActual?.propietario_nombre}</strong>?
+          </CModalBody>
+          <CModalFooter>
+            <CButton color="secondary" onClick={() => setDeleteModalVisible(false)} disabled={loading}>Cancelar</CButton>
+            <CButton color="danger" className="text-white" onClick={handleDelete} disabled={loading}>
+              {loading ? <CSpinner size="sm" /> : 'Eliminar'}
+            </CButton>
+          </CModalFooter>
+        </CModal>
+      </CRow>
+    </div>
   );
 };
 
