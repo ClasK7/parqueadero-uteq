@@ -34,9 +34,8 @@ Siga estos pasos exactos para configurar el entorno de desarrollo y ejecutar la 
     ```bash 
     npm install
 
-3. **Configurar las variables de entorno:**
+3. **Configurar las variables de entorno:** Cree un archivo llamado .env en la raíz absoluta del proyecto y asigne sus credenciales tanto de Firebase como de Supabase:
     ```bash 
-    Cree un archivo llamado .env en la raíz absoluta del proyecto y asigne sus credenciales tanto de Firebase como de Supabase:
     # Credenciales de Firebase (Sensores en tiempo real)
     VITE_FIREBASE_API_KEY=tu_api_key
     VITE_FIREBASE_AUTH_DOMAIN=tu_proyecto.firebaseapp.com
@@ -51,6 +50,7 @@ Siga estos pasos exactos para configurar el entorno de desarrollo y ejecutar la 
     VITE_SUPABASE_ANON_KEY=tu_anon_key_publica
 
 4. **Inicializar la Base de Datos (Solo el primer uso):**
+
 Firebase (Sensores): Si su Realtime Database está completamente vacía, inicie la aplicación, diríjase a la página de "Inicio" y haga clic en el botón de Setup para generar la estructura de los 80 sensores.
 
 Supabase (Administración): Diríjase al panel SQL de su proyecto en Supabase, ejecute el script supabase_parqueadero_uteq.sql para crear las tablas y posteriormente configure las políticas de Seguridad de Nivel de Fila (RLS) para permitir las acciones CRUD.
