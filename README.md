@@ -1,3 +1,9 @@
+![React](https://img.shields.io/badge/REACT-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Vite](https://img.shields.io/badge/VITE-B73CE7?style=for-the-badge&logo=vite&logoColor=FFD62E)
+![Supabase](https://img.shields.io/badge/SUPABASE-1C1C1C?style=for-the-badge&logo=supabase&logoColor=3ECF8E)
+![Firebase](https://img.shields.io/badge/FIREBASE-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
+![Bootstrap](https://img.shields.io/badge/BOOTSTRAP-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
+
 # 🎓 UTEQ Smart Parking - Monitoreo Telemático y Gestión Administrativa
 
 Este proyecto es una plataforma web desarrollada para la gestión y monitoreo del estacionamiento inteligente en la Sede Central de la Universidad Técnica Estatal de Quevedo (UTEQ). El sistema combina una arquitectura en tiempo real para el monitoreo de 80 espacios de parqueo organizados geográficamente, junto con un módulo administrativo relacional para el control estructurado de vehículos y propietarios autorizados.
