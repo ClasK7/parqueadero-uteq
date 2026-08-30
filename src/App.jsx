@@ -3,6 +3,7 @@ import Inicio from "./pages/Inicio";
 import Estacionamiento from "./pages/Estacionamiento";
 import DetalleEspacio from "./pages/DetalleEspacio";
 import Vehiculos from "./views/parqueadero/Vehiculos"; // <-- Módulo de CoreUI
+import Logo from "./components/Logo";
 import "./styles.css";
 
 export default function App() {
@@ -11,7 +12,8 @@ export default function App() {
       {/* Barra de navegación con colores UTEQ */}
       <nav className="navbar">
         <div className="navbar-brand">
-          <span style={{ fontSize: '1.5rem' }}>🎓</span> UTEQ Smart Parking
+          {/* Reemplazado el texto por el componente SVG con las medidas de la guía */}
+          <Logo width={250} height={58} style={{ color: 'white' }} />
         </div>
         <div className="navbar-links">
           <NavLink to="/" end className={({ isActive }) => (isActive ? "active" : "")}>
