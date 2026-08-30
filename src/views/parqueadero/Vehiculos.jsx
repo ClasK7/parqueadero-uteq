@@ -14,10 +14,11 @@ const Vehiculos = () => {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [vehiculoActual, setVehiculoActual] = useState(null);
   
+  // Estado adaptado a las columnas exactas del SQL del profesor
   const [formData, setFormData] = useState({
-    placa: '', marca: '', modelo: '', anio: '', color: '', 
-    propietario_nombre: '', cedula: '', correo: '', estado: 'Autorizado',
-    foto_vehiculo: '', foto_propietario: ''
+    placa: '', marca: '', modelo: '', anio: '', color: '', tipo: 'AUTOMOVIL',
+    propietario_nombre: '', cedula_propietario: '', correo_institucional: '', autorizado: true,
+    foto_url: '', foto_propietario_url: '', foto_fuente_url: 'https://es.wikipedia.org/'
   });
 
   useEffect(() => {
@@ -25,23 +26,32 @@ const Vehiculos = () => {
   }, [fetchVehiculos]);
 
   const filteredVehiculos = vehiculos.filter(v => 
-    v.placa.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    v.propietario_nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    v.placa?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    v.propietario_nombre?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value, type } = e.target;
+    // Convierte el valor del select a booleano para la columna 'autorizado'
+    const finalValue = (name === 'autorizado') ? (value === 'true') : value;
+    setFormData({ ...formData, [name]: finalValue });
   };
 
   const openAddModal = () => {
-    setFormData({ placa: '', marca: '', modelo: '', anio: '', color: '', propietario_nombre: '', cedula: '', correo: '', estado: 'Autorizado', foto_vehiculo: '', foto_propietario: '' });
+    setFormData({ 
+      placa: '', marca: '', modelo: '', anio: '', color: '', tipo: 'AUTOMOVIL',
+      propietario_nombre: '', cedula_propietario: '', correo_institucional: '', autorizado: true, 
+      foto_url: '', foto_propietario_url: '', foto_fuente_url: 'https://es.wikipedia.org/' 
+    });
     setVehiculoActual(null);
     setModalVisible(true);
   };
 
   const openEditModal = (vehiculo) => {
-    setFormData(vehiculo);
+    setFormData({
+      ...vehiculo,
+      cedula_propietario: vehiculo.cedula_propietario || ''
+    });
     setVehiculoActual(vehiculo);
     setModalVisible(true);
   };
@@ -52,7 +62,7 @@ const Vehiculos = () => {
   };
 
   const handleSave = async () => {
-    if (!formData.placa || !formData.propietario_nombre || !formData.cedula) {
+    if (!formData.placa || !formData.propietario_nombre || !formData.cedula_propietario) {
       alert("La placa, el nombre del propietario y la cédula son obligatorios.");
       return;
     }
@@ -66,6 +76,7 @@ const Vehiculos = () => {
 
     if (result.success) {
       setModalVisible(false);
+      fetchVehiculos(); // Recargar para obtener la cédula enmascarada del servidor
     } else {
       alert("Error al guardar: " + result.error);
     }
@@ -81,7 +92,6 @@ const Vehiculos = () => {
   };
 
   return (
-    // Forzamos el tema claro (light) para que coincida con la plantilla del profesor
     <div data-coreui-theme="light" style={{ padding: '20px', backgroundColor: '#f3f4f7', minHeight: '100vh' }}>
       <CRow>
         <CCol xs={12}>
@@ -132,55 +142,49 @@ const Vehiculos = () => {
                   <CTableBody>
                     {filteredVehiculos.map((v) => (
                       <CTableRow key={v.id}>
-                        {/* Foto Vehículo */}
                         <CTableDataCell>
                           <img 
-                            src={v.foto_vehiculo || `https://ui-avatars.com/api/?name=${v.marca}+${v.modelo}&background=random`} 
+                            src={v.foto_url || `https://ui-avatars.com/api/?name=${v.marca}+${v.modelo}&background=random`} 
                             alt="Vehículo" 
                             style={{ width: '80px', height: '50px', objectFit: 'cover', borderRadius: '4px' }} 
                           />
                         </CTableDataCell>
                         
-                        {/* Placa (Estilo oscuro) */}
                         <CTableDataCell>
                           <CBadge color="dark" className="fs-6 px-3 py-2 rounded-1">{v.placa}</CBadge>
                         </CTableDataCell>
                         
-                        {/* Vehículo */}
                         <CTableDataCell>
                           <div className="fw-bold">{v.marca}</div>
                           <div className="small text-muted">{v.modelo}</div>
                         </CTableDataCell>
                         
-                        {/* Año y Color */}
                         <CTableDataCell>
                           <div>{v.anio}</div>
                           <div className="small text-muted">{v.color}</div>
                         </CTableDataCell>
                         
-                        {/* Foto Propietario */}
                         <CTableDataCell className="text-center">
                           <img 
-                            src={v.foto_propietario || `https://ui-avatars.com/api/?name=${v.propietario_nombre}&background=random&rounded=true`} 
+                            src={v.foto_propietario_url || `https://ui-avatars.com/api/?name=${v.propietario_nombre}&background=random&rounded=true`} 
                             alt="Propietario" 
                             style={{ width: '45px', height: '45px', objectFit: 'cover', borderRadius: '50%' }} 
                           />
                         </CTableDataCell>
                         
-                        {/* Propietario */}
                         <CTableDataCell>
                           <div className="fw-bold">{v.propietario_nombre}</div>
                         </CTableDataCell>
                         
-                        <CTableDataCell>{v.cedula}</CTableDataCell>
+                        <CTableDataCell>{v.cedula_enmascarada || v.cedula_propietario}</CTableDataCell>
                         
                         <CTableDataCell>
-                          <a href={`mailto:${v.correo}`} className="text-decoration-none">{v.correo}</a>
+                          <a href={`mailto:${v.correo_institucional}`} className="text-decoration-none">{v.correo_institucional}</a>
                         </CTableDataCell>
                         
                         <CTableDataCell>
-                          <CBadge color={v.estado === 'Autorizado' ? 'success' : 'danger'} shape="rounded-pill">
-                            {v.estado}
+                          <CBadge color={v.autorizado ? 'success' : 'danger'} shape="rounded-pill">
+                            {v.autorizado ? 'Autorizado' : 'No autorizado'}
                           </CBadge>
                         </CTableDataCell>
                         
@@ -224,7 +228,7 @@ const Vehiculos = () => {
                   <CFormInput label="Color" name="color" value={formData.color} onChange={handleInputChange} disabled={loading} />
                 </CCol>
                 <CCol md={6}>
-                  <CFormInput label="URL Foto del Vehículo (Opcional)" name="foto_vehiculo" placeholder="https://ejemplo.com/auto.jpg" value={formData.foto_vehiculo} onChange={handleInputChange} disabled={loading} />
+                  <CFormInput label="URL Foto del Vehículo" name="foto_url" placeholder="https://ejemplo.com/auto.jpg" value={formData.foto_url} onChange={handleInputChange} disabled={loading} />
                 </CCol>
               </CRow>
               
@@ -234,20 +238,20 @@ const Vehiculos = () => {
                   <CFormInput label="Nombre Completo *" name="propietario_nombre" value={formData.propietario_nombre} onChange={handleInputChange} disabled={loading} />
                 </CCol>
                 <CCol md={4}>
-                  <CFormInput label="Cédula *" name="cedula" value={formData.cedula} onChange={handleInputChange} disabled={loading} />
+                  <CFormInput label="Cédula *" name="cedula_propietario" value={formData.cedula_propietario} onChange={handleInputChange} disabled={loading} />
                 </CCol>
               </CRow>
               <CRow className="mb-3">
                 <CCol md={5}>
-                  <CFormInput label="Correo" name="correo" type="email" value={formData.correo} onChange={handleInputChange} disabled={loading} />
+                  <CFormInput label="Correo" name="correo_institucional" type="email" value={formData.correo_institucional} onChange={handleInputChange} disabled={loading} />
                 </CCol>
                 <CCol md={4}>
-                  <CFormInput label="URL Foto Propietario (Opcional)" name="foto_propietario" placeholder="https://ejemplo.com/foto.jpg" value={formData.foto_propietario} onChange={handleInputChange} disabled={loading} />
+                  <CFormInput label="URL Foto Propietario" name="foto_propietario_url" placeholder="https://ejemplo.com/foto.jpg" value={formData.foto_propietario_url} onChange={handleInputChange} disabled={loading} />
                 </CCol>
                 <CCol md={3}>
-                  <CFormSelect label="Estado" name="estado" value={formData.estado} onChange={handleInputChange} disabled={loading}>
-                    <option value="Autorizado">Autorizado</option>
-                    <option value="Bloqueado">Bloqueado</option>
+                  <CFormSelect label="Estado" name="autorizado" value={formData.autorizado} onChange={handleInputChange} disabled={loading}>
+                    <option value={true}>Autorizado</option>
+                    <option value={false}>No autorizado</option>
                   </CFormSelect>
                 </CCol>
               </CRow>
