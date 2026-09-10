@@ -4,6 +4,7 @@ import Estacionamiento from "./pages/Estacionamiento";
 import DetalleEspacio from "./pages/DetalleEspacio";
 import Vehiculos from "./views/parqueadero/Vehiculos"; // <-- Módulo de CoreUI
 import Logo from "./components/Logo";
+import MonitoreoEntrada from "./views/parqueadero/MonitoreoEntrada"; // <-- Nueva importación
 import "./styles.css";
 
 export default function App() {
