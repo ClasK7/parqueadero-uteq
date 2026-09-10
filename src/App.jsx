@@ -27,6 +27,9 @@ export default function App() {
           <NavLink to="/vehiculos" className={({ isActive }) => (isActive ? "active" : "")}>
             Vehículos y Propietarios
           </NavLink>
+          <NavLink to="/monitoreo-entrada" className={({ isActive }) => (isActive ? "active" : "")}>
+            Monitoreo de Entrada
+          </NavLink>
         </div>
       </nav>
 
@@ -38,6 +41,7 @@ export default function App() {
         {/* <-- Nueva ruta del CRUD --> */}
         <Route path="/vehiculos" element={<Vehiculos />} />
         <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/monitoreo-entrada" element={<MonitoreoEntrada />} />
       </Routes>
     </BrowserRouter>
   );
